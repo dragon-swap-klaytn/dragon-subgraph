@@ -24,6 +24,6 @@
     "deploy:cypress": "graph deploy  --network cypress --node $npm_package_config_cypress_graph_node --ipfs $npm_package_config_cypress_ipfs_url -l 0.3 dragonswap/exchange-v2",
     "all:cypress": "NETWORK=cypress yarn template && yarn codegen && yarn build && yarn create:cypress && yarn deploy:cypress",
     "deploy:kaia": "graph deploy --studio dgswap-exchange-v2-kaia",
-    "all:kaia": "NETWORK=cypress yarn template && yarn codegen && yarn build && yarn deploy:cypress"
+    "all:kaia": "NETWORK=cypress npm run template && npm run codegen && npm run build && npm run deploy:cypress"
   }
 }
