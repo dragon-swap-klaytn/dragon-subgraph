@@ -12,6 +12,7 @@ const BIRDS_PING = "0x608e8512d31cae43cd8058d81e6b56203a112539";
  * @type import('./config').NetworkConfig
  */
 module.exports = {
+  version: "1.0.6",
   network: "kaia",
   wNativeAddress: WKLAY,
   v3: {
