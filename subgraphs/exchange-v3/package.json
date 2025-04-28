@@ -24,6 +24,8 @@
     "create:cypress": "graph create  --network cypress --node $npm_package_config_cypress_graph_node dragonswap/exchange-v3",
     "deploy:cypress": "graph deploy  --network cypress --node $npm_package_config_cypress_graph_node --ipfs $npm_package_config_cypress_ipfs_url -l 0.3 dragonswap/exchange-v3",
     "all:cypress": "NETWORK=cypress yarn template && yarn codegen && yarn build && yarn create:cypress && yarn deploy:cypress",
+    "create:local": "graph create --node http://host.docker.internal:8020/ dgswap-exchange-v3-kaia",
+    "deploy:local": "graph deploy --node http://host.docker.internal:8020/ --ipfs http://host.docker.internal:5001 --version-label $npm_package_version dgswap-exchange-v3-kaia",
     "deploy:kaia": "graph deploy --studio --version-label $npm_package_version dgswap-exchange-v3-kaia",
     "all:kaia": "NETWORK=kaia npm run template && npm run codegen && npm run build && npm run deploy:kaia"
   }

@@ -1170,8 +1170,8 @@ blob-to-it@^1.0.1:
   dependencies:
     browser-readablestream-to-it "^1.0.3"
 
-"blocks@file:/Users/jyoo/repos/github.com/dragon-swap-klaytn/dragon-subgraph/subgraphs/blocks":
-  version "1.0.0"
+"blocks@file:/workspaces/dragon-subgraph/subgraphs/blocks":
+  version "1.0.6"
   resolved "file:subgraphs/blocks"
 
 bn.js@^4.11.9:
@@ -2053,12 +2053,12 @@ evp_bytestokey@^1.0.3:
     md5.js "^1.3.4"
     safe-buffer "^5.1.1"
 
-"exchange-v2@file:/Users/jyoo/repos/github.com/dragon-swap-klaytn/dragon-subgraph/subgraphs/exchange-v2":
-  version "1.0.4"
+"exchange-v2@file:/workspaces/dragon-subgraph/subgraphs/exchange-v2":
+  version "1.0.6"
   resolved "file:subgraphs/exchange-v2"
 
-"exchange-v3-template@file:/Users/jyoo/repos/github.com/dragon-swap-klaytn/dragon-subgraph/subgraphs/exchange-v3":
-  version "1.0.4"
+"exchange-v3-template@file:/workspaces/dragon-subgraph/subgraphs/exchange-v3":
+  version "1.0.6"
   resolved "file:subgraphs/exchange-v3"
 
 execa@^5.0.0, execa@5.1.1:
@@ -4459,6 +4459,11 @@ turbo-darwin-arm64@1.7.4:
   version "1.7.4"
   resolved "https://registry.npmjs.org/turbo-darwin-arm64/-/turbo-darwin-arm64-1.7.4.tgz"
   integrity sha512-CKIXg9uqp1a+Yeq/c4U0alPOqvwLUq5SBZf1PGYhGqJsfG0fRBtJfkUjHuBsuJIOGXg8rCmcGSWGIsIF6fqYuw==
+
+turbo-linux-arm64@1.7.4:
+  version "1.7.4"
+  resolved "https://registry.npmjs.org/turbo-linux-arm64/-/turbo-linux-arm64-1.7.4.tgz"
+  integrity sha512-Bg65F0AjYYYxqE6RPf2H5TIGuA/EyWMeGOATHVSZOWAbYcnG3Ly03GZii8AHnUi7ntWBdjwvXf/QbOS1ayNB6A==
 
 turbo@^1.7.4:
   version "1.7.4"
