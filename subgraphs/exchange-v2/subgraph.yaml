@@ -1,5 +1,5 @@
 specVersion: 0.0.4
-description: PancakeSwap is a multi-chain decentralized exchange and automated market maker protocol. v1.0.6
+description: PancakeSwap is a multi-chain decentralized exchange and automated market maker protocol. v1.0.7
 repository: https://github.com/pancakeswap
 schema:
   file: ./schema.graphql
