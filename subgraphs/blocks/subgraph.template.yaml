@@ -1,5 +1,5 @@
 specVersion: 0.0.4
-description: Binance Smart Chain Blocks v
+description: Binance Smart Chain Blocks v{{ version }}
 repository: https://github.com/pancakeswap
 schema:
   file: ./schema.graphql

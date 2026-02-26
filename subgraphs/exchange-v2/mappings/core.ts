@@ -22,7 +22,7 @@ import {
 import { ADDRESS_ZERO, BI_18, convertTokenToDecimal, FACTORY_ADDRESS, ONE_BI, ZERO_BD } from "./utils";
 
 function isCompleteMint(mintId: string): boolean {
-  return MintEvent.load(mintId).sender !== null; // sufficient checks
+  return MintEvent.load(mintId)!.sender !== null; // sufficient checks
 }
 
 export function handleTransfer(event: Transfer): void {
@@ -32,7 +32,7 @@ export function handleTransfer(event: Transfer): void {
   }
 
   // get pair and load contract
-  let pair = Pair.load(event.address.toHex());
+  let pair = Pair.load(event.address.toHex())!;
 
   // liquidity token amount being transferred
   let value = convertTokenToDecimal(event.params.value, BI_18);
@@ -112,7 +112,7 @@ export function handleTransfer(event: Transfer): void {
     let burns = transaction.burns;
     let burn: BurnEvent;
     if (burns.length > 0) {
-      let currentBurn = BurnEvent.load(burns[burns.length - 1]);
+      let currentBurn = BurnEvent.load(burns[burns.length - 1])!;
       if (currentBurn.needsComplete) {
         burn = currentBurn as BurnEvent;
       } else {
@@ -142,7 +142,7 @@ export function handleTransfer(event: Transfer): void {
 
     // if this logical burn included a fee mint, account for this
     if (mints.length !== 0 && !isCompleteMint(mints[mints.length - 1])) {
-      let mint = MintEvent.load(mints[mints.length - 1]);
+      let mint = MintEvent.load(mints[mints.length - 1])!;
       burn.feeTo = mint.to;
       burn.feeLiquidity = mint.liquidity;
       // remove the logical mint
@@ -176,10 +176,13 @@ export function handleTransfer(event: Transfer): void {
 }
 
 export function handleSync(event: Sync): void {
-  let pair = Pair.load(event.address.toHex());
+  let pair = Pair.load(event.address.toHex())!;
   let token0 = Token.load(pair.token0);
   let token1 = Token.load(pair.token1);
-  let pancake = PancakeFactory.load(FACTORY_ADDRESS);
+  if (token0 === null || token1 === null) {
+    return;
+  }
+  let pancake = PancakeFactory.load(FACTORY_ADDRESS)!;
 
   // reset factory liquidity by subtracting only tracked liquidity
   pancake.totalLiquidityETH = pancake.totalLiquidityETH.minus(pair.trackedReserveETH as BigDecimal);
@@ -196,7 +199,7 @@ export function handleSync(event: Sync): void {
   if (pair.reserve0.notEqual(ZERO_BD)) pair.token1Price = pair.reserve1.div(pair.reserve0);
   else pair.token1Price = ZERO_BD;
 
-  let bundle = Bundle.load("1");
+  let bundle = Bundle.load("1")!;
   bundle.ethPrice = getETHPriceInUSD();
   bundle.save();
 
@@ -248,14 +251,25 @@ export function handleSync(event: Sync): void {
 
 export function handleMint(event: Mint): void {
   let transaction = Transaction.load(event.transaction.hash.toHex());
+  if (transaction === null) {
+    return;
+  }
+
   let mints = transaction.mints;
   let mint = MintEvent.load(mints[mints.length - 1]);
 
-  let pair = Pair.load(event.address.toHex());
-  let pancake = PancakeFactory.load(FACTORY_ADDRESS);
+  if (mint === null) {
+    return;
+  }
+
+  let pair = Pair.load(event.address.toHex())!;
+  let pancake = PancakeFactory.load(FACTORY_ADDRESS)!;
 
   let token0 = Token.load(pair.token0);
   let token1 = Token.load(pair.token1);
+  if (token0 === null || token1 === null) {
+    return;
+  }
 
   // update exchange info (except balances, sync will cover that)
   let token0Amount = convertTokenToDecimal(event.params.amount0, token0.decimals);
@@ -266,7 +280,7 @@ export function handleMint(event: Mint): void {
   token1.totalTransactions = token1.totalTransactions.plus(ONE_BI);
 
   // get new amounts of USD and BNB for tracking
-  let bundle = Bundle.load("1");
+  let bundle = Bundle.load("1")!;
   let amountTotalUSD = token1.derivedETH
     .times(token1Amount)
     .plus(token0.derivedETH.times(token0Amount))
@@ -305,12 +319,20 @@ export function handleBurn(event: Burn): void {
   let burns = transaction.burns;
   let burn = BurnEvent.load(burns[burns.length - 1]);
 
-  let pair = Pair.load(event.address.toHex());
-  let pancake = PancakeFactory.load(FACTORY_ADDRESS);
+  if (burn === null) {
+    return;
+  }
+
+  let pair = Pair.load(event.address.toHex())!;
+  let pancake = PancakeFactory.load(FACTORY_ADDRESS)!;
 
   //update token info
   let token0 = Token.load(pair.token0);
   let token1 = Token.load(pair.token1);
+  if (token0 === null || token1 === null) {
+    return;
+  }
+
   let token0Amount = convertTokenToDecimal(event.params.amount0, token0.decimals);
   let token1Amount = convertTokenToDecimal(event.params.amount1, token1.decimals);
 
@@ -319,7 +341,7 @@ export function handleBurn(event: Burn): void {
   token1.totalTransactions = token1.totalTransactions.plus(ONE_BI);
 
   // get new amounts of USD and BNB for tracking
-  let bundle = Bundle.load("1");
+  let bundle = Bundle.load("1")!;
   let amountTotalUSD = token1.derivedETH
     .times(token1Amount)
     .plus(token0.derivedETH.times(token0Amount))
@@ -352,9 +374,12 @@ export function handleBurn(event: Burn): void {
 }
 
 export function handleSwap(event: Swap): void {
-  let pair = Pair.load(event.address.toHex());
+  let pair = Pair.load(event.address.toHex())!;
   let token0 = Token.load(pair.token0);
   let token1 = Token.load(pair.token1);
+  if (token0 === null || token1 === null) {
+    return;
+  }
   let amount0In = convertTokenToDecimal(event.params.amount0In, token0.decimals);
   let amount1In = convertTokenToDecimal(event.params.amount1In, token1.decimals);
   let amount0Out = convertTokenToDecimal(event.params.amount0Out, token0.decimals);
@@ -365,7 +390,7 @@ export function handleSwap(event: Swap): void {
   let amount1Total = amount1Out.plus(amount1In);
 
   // BNB/USD prices
-  let bundle = Bundle.load("1");
+  let bundle = Bundle.load("1")!;
 
   let derivedToken0AmountETH = token0.derivedETH.times(amount0Total);
   let derivedToken1AmountETH = token1.derivedETH.times(amount1Total);
@@ -434,7 +459,7 @@ export function handleSwap(event: Swap): void {
   pair.save();
 
   // update global values, only used tracked amounts for volume
-  let pancake = PancakeFactory.load(FACTORY_ADDRESS);
+  let pancake = PancakeFactory.load(FACTORY_ADDRESS)!;
   pancake.totalVolumeUSD = pancake.totalVolumeUSD.plus(trackedAmountUSD);
   pancake.totalVolumeETH = pancake.totalVolumeETH.plus(trackedAmountETH);
   pancake.untrackedVolumeUSD = pancake.untrackedVolumeUSD.plus(derivedAmountUSD);

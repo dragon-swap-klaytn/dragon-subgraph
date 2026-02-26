@@ -35,10 +35,10 @@ export function getETHPriceInUSD(): BigDecimal {
 
 // token where amounts should contribute to tracked volume and liquidity
 // prettier-ignore
-let WHITELIST: string[] = "0x19aac5f612f524b754ca7e7c41cbfa2e981a4432,0x5c13e303a62fc5dedf5b52d66873f2e59fedadc2,0x608792deb376cce1c9fa4d0e6b7b44f507cffa6a,0x98a8345bb9d3dda9d808ca1c9142a28f6b0430e1,0x15d9f3ab1982b0e5a415451259994ff40369f584".split(",");
+let WHITELIST: string[] = "0x19aac5f612f524b754ca7e7c41cbfa2e981a4432,0xd077a400968890eacc75cdc901f0356c943e4fdb,0x5c13e303a62fc5dedf5b52d66873f2e59fedadc2,0x608792deb376cce1c9fa4d0e6b7b44f507cffa6a,0x98a8345bb9d3dda9d808ca1c9142a28f6b0430e1,0x15d9f3ab1982b0e5a415451259994ff40369f584,0x42952b873ed6f7f0a7e4992e2a9818e3a9001995,0x84f8c3c8d6ee30a559d73ec570d574f671e82647,0x608e8512d31cae43cd8058d81e6b56203a112539".split(",");
 
 // minimum liquidity for price to get tracked
-let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString("5");
+let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString("4");
 
 /**
  * Search through graph to find derived BNB per token.
@@ -53,12 +53,21 @@ export function findEthPerToken(token: Token): BigDecimal {
     let pairAddress = factoryContract.getPair(Address.fromString(token.id), Address.fromString(WHITELIST[i]));
     if (pairAddress.toHex() != ADDRESS_ZERO) {
       let pair = Pair.load(pairAddress.toHex());
+      if (pair === null) {
+        continue;
+      }
       if (pair.token0 == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
         let token1 = Token.load(pair.token1);
+        if (token1 === null) {
+          continue;
+        }
         return pair.token1Price.times(token1.derivedETH as BigDecimal); // return token1 per our token * BNB per token 1
       }
       if (pair.token1 == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
         let token0 = Token.load(pair.token0);
+        if (token0 === null) {
+          continue;
+        }
         return pair.token0Price.times(token0.derivedETH as BigDecimal); // return token0 per our token * BNB per token 0
       }
     }

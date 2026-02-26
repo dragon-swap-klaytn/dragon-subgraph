@@ -1,5 +1,5 @@
-specVersion: 0.0.2
-description: PancakeSwap is a multi-chain decentralized exchange and automated market maker protocol.
+specVersion: 0.0.4
+description: PancakeSwap is a multi-chain decentralized exchange and automated market maker protocol. v1.0.7
 repository: https://github.com/pancakeswap/pancake-subgraph
 schema:
   file: ./schema.graphql
@@ -8,14 +8,14 @@ features:
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: cypress
+    network: kaia
     source:
       address: "0x7431A23897ecA6913D5c81666345D39F27d946A4"
       abi: Factory
       startBlock: 145315248
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       file: ./mappings/factory.ts
       entities:
@@ -37,14 +37,14 @@ dataSources:
           handler: handlePoolCreated
   - kind: ethereum/contract
     name: NonfungiblePositionManager
-    network: cypress
+    network: kaia
     source:
       address: "0x68f762d28CebaD501c090949e4680697e56848fC"
       abi: NonfungiblePositionManager
       startBlock: 145315281
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       file: ./mappings/position-manager.ts
       entities:
@@ -71,12 +71,12 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pool
-    network: cypress
+    network: kaia
     source:
       abi: Pool
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       file: ./mappings/core.ts
       entities:
